@@ -77,4 +77,30 @@ class User_Question(models.Model):
         ordering = ['ANSWERED_ON']
         unique_together = ["USER_ID", "QUESTION_ID"]
 
+class Allergen(models.Model):
+    """Represents a potential allergen."""
+    ALLERGEN_ID = models.AutoField(primary_key=True)
+    NAME = models.CharField(max_length=100, unique=True, help_text="Name of the allergen (e.g., Pollen, Peanuts)")
+
+    def __str__(self):
+        return self.NAME
+
+
+class DailyLog(models.Model):
+    """Tracks daily health and food information for a user."""
+    LOG_ID = models.AutoField(primary_key=True)
+    DATE = models.DateField(auto_now_add=True, help_text="The date the log entry was created")
+
+    # Symptom tracking
+    HAS_ALLERGIES = models.BooleanField(default=False, help_text="Does the user have allergy symptoms?")
+    HAS_COUGH = models.BooleanField(default=False, help_text="Does the user have a cough?")
+
+    # Relational field for specific allergens
+    ALLERGENS = models.ManyToManyField(Allergen, blank=True, help_text="Specific allergens the user was exposed to")
+
+    # Flexible field for a list of food items
+    FOOD = models.JSONField(default=list, blank=True, help_text="List of food items consumed")
+
+    def __str__(self):
+        return f"Log for {self.ALLERGENS} on {self.DATE}"
     

@@ -2,19 +2,21 @@ import os
 from typing import List, Optional
 from urllib.parse import urlparse
 
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 import json
 import re
 from random import randint
 
 class AIGeneratorService:
     def __init__(self, api_key: str=None, client=None):
-        self.api_key = urlparse(os.getenv("GEMINI_KEY"))
-        self.client = genai.Client(api_key=self.api_key)  # Configure the API key
+        """
+        Initializes the service and configures the Google Gemini API key.
+        """
+        api_key = api_key or os.getenv("GEMINI_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_KEY environment variable not set.")
+        genai.configure(api_key=api_key)
 
-    def seed(self) -> bool:
-        return True
 
     def create_new_question(self, topic: str):  
         try:
@@ -46,9 +48,7 @@ class AIGeneratorService:
 
             response = self.client.models.generate_content(
                 model="gemini-2.0-flash",  
-                config=types.GenerateContentConfig(
-                    system_instruction=sys_instruct
-                ),
+            
                 contents=prompt
             )
 

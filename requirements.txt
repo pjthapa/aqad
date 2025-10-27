@@ -1,0 +1,14 @@
+# Django Framework
+Django~=4.2.0
+
+# Django REST Framework and CORS
+djangorestframework
+django-cors-headers
+
+# Database & Environment
+psycopg2-binary
+python-dotenv
+
+# Google AI
+google-generativeai
+
